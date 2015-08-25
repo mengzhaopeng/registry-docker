@@ -8,6 +8,7 @@ createRegistryUi.sh - create http service of registry container
 
 Server Certificate:  
   -  /etc/pki/CA/cacert.pem  
+
 Client:  
   -  $ cp /etc/pki/tls/certs/ca-bundle.crt{,.bak}  
   -  $ cat cacert.pem >> /etc/pki/tls/certs/ca-bundle.crt  
