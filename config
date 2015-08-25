@@ -1,0 +1,17 @@
+# setup for openssl parameter
+# C - Country
+# ST - State
+# L - local
+# O - Organization
+# OU - Organization Unit
+C=XX
+ST=XX
+L=XX
+O=XX
+OU=XX
+emailAddress=XX@XXX.com
+
+# ldap info
+LDAP_SERVER=127.0.0.1
+LDAP_BASE_DN=dc=demo,dc=com
+SLAPD_PASSWORD=password
