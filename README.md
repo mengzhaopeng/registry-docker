@@ -1,6 +1,6 @@
 Private Docker Registry with Nginx(ldap)
-
-Important! - the script is only tested on CentOS7 and please use root permissions to execute.
+=======
+`Important! - the script is only tested on CentOS7 and please use root permissions to execute.`
 
 createRegistry.sh - create docker registry container  
 createNginxForRegistry.sh - create nginx(ldap) container  
