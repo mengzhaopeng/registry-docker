@@ -1,0 +1,70 @@
+
+worker_processes  4;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    #tcp_nopush     on;
+    keepalive_timeout  65;
+    #gzip  on;
+
+    ldap_server ldapserver{
+        url ldap://{LDAP_SERVER}:389/{LDAP_BASE_DN}?uid?sub?(objectClass=inetOrgPerson);
+        binddn "cn=admin,{LDAP_BASE_DN}";
+        binddn_passwd {SLAPD_PASSWORD};
+        require valid_user;
+        satisfy any;
+    }
+
+    upstream docker-registry {
+        server {HOSTNAME}:5000;
+    }
+
+    server {
+        listen       443;
+        server_name  {HOSTNAME};
+
+        ssl on;
+        ssl_certificate /etc/ssl/nginx.crt;
+        ssl_certificate_key /etc/ssl/nginx.key;
+
+        auth_ldap "Forbidden";
+        auth_ldap_servers ldapserver;
+
+        #charset koi8-r;
+        #access_log  logs/host.access.log  main;
+
+        proxy_set_header Host       $http_host;
+        proxy_set_header X-Real-IP  $remote_addr;
+        client_max_body_size 0;
+        chunked_transfer_encoding on;
+
+        location / {
+#            root   html;
+#            index  index.html index.htm;
+            proxy_pass http://docker-registry;
+        }
+        location /_ping {
+            auth_basic off;
+            proxy_pass http://docker-registry;
+        }
+        location /v1/_ping {
+            auth_basic off;
+            proxy_pass http://docker-registry;
+        }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+}
